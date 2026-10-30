@@ -426,3 +426,70 @@ async def test_example_webhook_plugin(hass, setup, hass_client_no_auth):
     assert resp.status == 200
     await hass.async_block_till_done()
     assert len(calls) == 1
+
+
+async def test_import_switch_manager_mqtt_wildcard(hass, mqtt_mock, setup):
+    """Nachbau der echten Konfiguration: Z2M-Blueprint mit Wildcard-Topic.
+
+    Ein Druck auf Phillips Schalter darf nicht Marlenes Sequenz auslösen.
+    """
+    from pytest_homeassistant_custom_component.common import async_fire_mqtt_message
+    from custom_components.switchboard.importer import async_import_switch_manager, mqtt_identifier
+
+    assert mqtt_identifier("Bett", "zigbee2mqtt/+/action") == "zigbee2mqtt/Bett/action"
+    assert mqtt_identifier("zigbee2mqtt/Bett/action", "zigbee2mqtt/+/action") == "zigbee2mqtt/Bett/action"
+
+    cfg = Path(hass.config.config_dir)
+    bp_dir = cfg / "blueprints" / "switch_manager"
+    bp_dir.mkdir(parents=True, exist_ok=True)
+    (bp_dir / "zigbee2mqtt-aqara-wireless-mini-switch.yaml").write_text(
+        """
+name: Aqara Wireless Mini Switch
+service: Zigbee2MQTT
+event_type: mqtt
+mqtt_topic_format: zigbee2mqtt/+/action
+buttons:
+  - actions:
+      - title: press
+        conditions: [{key: payload, value: single}]
+      - title: press 2x
+        conditions: [{key: payload, value: double}]
+""",
+        encoding="utf-8",
+    )
+    # 1x1-PNG daneben, um die Bildgröße zu prüfen
+    png = bytes.fromhex(
+        "89504e470d0a1a0a0000000d4948445200000040000000200806000000"
+        "0000000000"
+    )
+    (bp_dir / "zigbee2mqtt-aqara-wireless-mini-switch.png").write_bytes(png)
+    (cfg / ".storage").mkdir(exist_ok=True)
+    (cfg / ".storage" / "switch_manager").write_text(
+        json.dumps({"version": 1, "key": "switch_manager", "data": {"managed_switches": {
+            "3": {"name": "Phillip", "blueprint": "zigbee2mqtt-aqara-wireless-mini-switch",
+                  "identifier": "zigbee2mqtt/Bett Schalter Phillip/action",
+                  "buttons": [{"actions": [{"mode": "single", "sequence": [{"action": "test.phillip"}]}]}]},
+            "8": {"name": "Marlene", "blueprint": "zigbee2mqtt-aqara-wireless-mini-switch",
+                  "identifier": "Bett Schalter Marlene",
+                  "buttons": [{"actions": [{"mode": "single", "sequence": [{"action": "test.marlene"}]}]}]},
+        }}}),
+        encoding="utf-8",
+    )
+    result = await async_import_switch_manager(hass)
+    assert sorted(result["imported"]) == ["Marlene", "Phillip"]
+    definition = setup.registry.definitions["sm_zigbee2mqtt_aqara_wireless_mini_switch"]
+    assert definition.source_config["topic"] == "{identifier}"
+    assert definition.image_size == [64.0, 32.0]
+    assert setup.configs["sm_8"]["inputs"]["identifier"] == "zigbee2mqtt/Bett Schalter Marlene/action"
+
+    phillip = async_mock_service(hass, "test", "phillip")
+    marlene = async_mock_service(hass, "test", "marlene")
+    await setup.async_set_enabled("sm_3", True)
+    await setup.async_set_enabled("sm_8", True)
+    async_fire_mqtt_message(hass, "zigbee2mqtt/Bett Schalter Phillip/action", "single")
+    await hass.async_block_till_done()
+    assert len(phillip) == 1 and len(marlene) == 0
+    async_fire_mqtt_message(hass, "zigbee2mqtt/Bett Schalter Marlene/action", "single")
+    async_fire_mqtt_message(hass, "zigbee2mqtt/Bett Schalter Marlene/action", "double")
+    await hass.async_block_till_done()
+    assert len(phillip) == 1 and len(marlene) == 1

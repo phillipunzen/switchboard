@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Final
 
 DOMAIN: Final = "switchboard"
-VERSION: Final = "1.0.0"
+VERSION: Final = "1.0.1"
 
 STORAGE_KEY: Final = DOMAIN
 STORAGE_VERSION: Final = 1

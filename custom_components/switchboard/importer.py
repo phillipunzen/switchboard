@@ -62,8 +62,10 @@ def convert_blueprint(bp_id: str, bp: dict[str, Any]) -> tuple[dict[str, Any], l
     event_type = str(bp.get("event_type", ""))
     if topic_fmt or event_type == "mqtt":
         source = "mqtt"
-        topic = str(topic_fmt or "{}").replace("{}", "{identifier}")
-        source_config = {"topic": topic, "payload": "json"}
+        # Switch Manager abonniert mqtt_topic_format (oft mit Wildcard wie
+        # "zigbee2mqtt/+/action") und filtert dann auf das konkrete Topic, das
+        # als Kennung gespeichert ist. Deshalb abonnieren wir genau die Kennung.
+        source_config = {"topic": "{identifier}", "payload": "json"}
     else:
         source = "event"
         source_config = {"event_type": event_type}
@@ -107,6 +109,30 @@ def convert_blueprint(bp_id: str, bp: dict[str, Any]) -> tuple[dict[str, Any], l
     return definition, action_ids
 
 
+def mqtt_identifier(identifier: str, topic_fmt: str | None) -> str:
+    """Macht aus einer Switch-Manager-Kennung ein konkretes MQTT-Topic."""
+    identifier = str(identifier or "").strip()
+    if not topic_fmt or "/" in identifier:
+        return identifier
+    fmt = str(topic_fmt)
+    if "{}" in fmt:
+        return fmt.replace("{}", identifier)
+    if "+" in fmt:
+        return fmt.replace("+", identifier, 1)
+    return identifier
+
+
+def _png_size(path: Path) -> list[int] | None:
+    try:
+        with path.open("rb") as fh:
+            head = fh.read(24)
+    except OSError:
+        return None
+    if head[:8] != b"\x89PNG\r\n\x1a\n" or len(head) < 24:
+        return None
+    return [int.from_bytes(head[16:20], "big"), int.from_bytes(head[20:24], "big")]
+
+
 def _collect(config_dir: Path) -> dict[str, Any]:
     blueprints: dict[str, tuple[dict[str, Any], Path]] = {}
     folders = [
@@ -147,6 +173,8 @@ def _write_definitions(target: Path, items: list[tuple[dict[str, Any], Path]]) -
                 dest = target / f"{definition['id']}{ext}"
                 shutil.copyfile(img, dest)
                 definition["image"] = dest.name
+                if ext == ".png" and (size := _png_size(dest)):
+                    definition["image_size"] = size
                 break
         with (target / f"{definition['id']}.yaml").open("w", encoding="utf-8") as fh:
             yaml.safe_dump(definition, fh, allow_unicode=True, sort_keys=False)
@@ -203,7 +231,10 @@ async def async_import_switch_manager(hass: HomeAssistant) -> dict[str, Any]:
                     "mode": (action or {}).get("mode", "single"),
                     "sequence": sequence,
                 }
-        inputs: dict[str, Any] = {"identifier": sm.get("identifier", "")}
+        identifier = str(sm.get("identifier", ""))
+        if definition.source == "mqtt":
+            identifier = mqtt_identifier(identifier, blueprints[bp_id][0].get("mqtt_topic_format"))
+        inputs: dict[str, Any] = {"identifier": identifier}
         config = {
             "id": "sm_" + (slugify(str(sm_id)) or "x"),
             "name": name,
