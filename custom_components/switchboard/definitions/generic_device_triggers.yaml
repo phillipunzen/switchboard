@@ -1,0 +1,8 @@
+# Universell für alle Geräte mit Geräte-Triggern (ZHA, Z-Wave, Shelly, deCONZ …).
+id: generic_device_triggers
+name: Beliebiges Gerät über Geräte-Trigger (automatisch)
+manufacturer: Universal
+integration: ZHA / Z-Wave / Shelly / deCONZ
+description: Wähle ein Gerät – Tasten und Aktionen kommen aus dessen Geräte-Triggern.
+source: device_trigger
+dynamic: true

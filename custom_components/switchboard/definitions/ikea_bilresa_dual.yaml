@@ -1,0 +1,33 @@
+# IKEA BILRESA Dual Button (Matter über Thread)
+# Matter legt pro Taste eine event-Entität an; das Ereignis steht in event_type.
+id: ikea_bilresa_dual
+name: BILRESA Dual Button
+manufacturer: IKEA
+model: BILRESA (2 Tasten)
+integration: Matter
+description: Zwei Tasten, jeweils 1×/2× drücken sowie lang drücken/loslassen.
+source: event_entity
+inputs:
+  - key: button_1
+    name: Taste 1 (oben)
+    selector: {entity: {domain: event}}
+  - key: button_2
+    name: Taste 2 (unten)
+    selector: {entity: {domain: event}}
+image: ikea_bilresa_dual.svg
+image_size: [200, 320]
+buttons:
+  - id: button_1
+    name: Taste 1 (oben)
+    shape: {type: rect, x: 40, y: 40, width: 120, height: 110, rx: 18}
+    match: {input: button_1}
+    actions: &bilresa_actions
+      - {id: press, name: 1× drücken, match: {event_type: multi_press_1}}
+      - {id: double, name: 2× drücken, match: {event_type: multi_press_2}}
+      - {id: hold, name: Lang drücken, match: {event_type: long_press}}
+      - {id: release, name: Lang losgelassen, match: {event_type: long_release}}
+  - id: button_2
+    name: Taste 2 (unten)
+    shape: {type: rect, x: 40, y: 170, width: 120, height: 110, rx: 18}
+    match: {input: button_2}
+    actions: *bilresa_actions

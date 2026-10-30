@@ -1,0 +1,15 @@
+{
+  "domain": "switchboard",
+  "name": "Switchboard",
+  "after_dependencies": ["mqtt", "device_automation"],
+  "codeowners": ["@phillipunzen"],
+  "config_flow": true,
+  "dependencies": ["frontend", "http", "panel_custom", "websocket_api"],
+  "documentation": "https://github.com/phillipunzen/switchboard",
+  "integration_type": "service",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/phillipunzen/switchboard/issues",
+  "requirements": [],
+  "single_config_entry": true,
+  "version": "1.0.0"
+}

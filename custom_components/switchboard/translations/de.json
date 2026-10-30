@@ -1,0 +1,35 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Switchboard",
+        "description": "Switchboard einrichten. Die Schalter werden danach im Switchboard-Panel in der Seitenleiste konfiguriert."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Switchboard ist bereits eingerichtet."
+    }
+  },
+  "entity": {
+    "event": {
+      "action": {
+        "name": "Tastenaktion"
+      }
+    },
+    "switch": {
+      "enabled": {
+        "name": "Aktiv"
+      }
+    }
+  },
+  "services": {
+    "reload": {
+      "name": "Neu laden",
+      "description": "Lädt Plugins und Schalter-Definitionen neu."
+    },
+    "import_switch_manager": {
+      "name": "Aus Switch Manager importieren",
+      "description": "Übernimmt Blueprints und Schalter aus dem Switch Manager (importierte Schalter sind zunächst deaktiviert)."
+    }
+  }
+}

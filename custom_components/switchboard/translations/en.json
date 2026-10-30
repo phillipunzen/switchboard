@@ -1,0 +1,35 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Switchboard",
+        "description": "Set up Switchboard. Switches are configured in the Switchboard panel in the sidebar."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Switchboard is already set up."
+    }
+  },
+  "entity": {
+    "event": {
+      "action": {
+        "name": "Button action"
+      }
+    },
+    "switch": {
+      "enabled": {
+        "name": "Enabled"
+      }
+    }
+  },
+  "services": {
+    "reload": {
+      "name": "Reload",
+      "description": "Reloads plugins and switch definitions."
+    },
+    "import_switch_manager": {
+      "name": "Import from Switch Manager",
+      "description": "Imports blueprints and switches from Switch Manager (imported switches start disabled)."
+    }
+  }
+}

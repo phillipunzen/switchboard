@@ -1,0 +1,34 @@
+id: zha_ikea_e1743
+name: TRÅDFRI Ein/Aus-Schalter (ZHA)
+manufacturer: IKEA
+model: E1743
+integration: ZHA
+source: event
+source_config:
+  event_type: zha_event
+  identifier_key: device_ieee
+inputs:
+  - key: identifier
+    name: IEEE-Adresse
+    description: z. B. 84:fd:27:ff:fe:12:34:56 (Gerät → Zigbee-Info)
+    selector: {text: {}}
+image: ikea_e1743.svg
+image_size: [200, 200]
+buttons:
+  - id: "on"
+    name: "I (Ein)"
+    shape: {type: rect, x: 30, y: 30, width: 140, height: 68, rx: 10}
+    virtual_multi_press: {action: press, max_presses: 3}
+    actions:
+      - {id: press, name: Drücken, match: {command: "on"}}
+      - {id: hold, name: Halten, match: {command: move_with_on_off}}
+      - {id: release, name: Loslassen, match: {command: [stop, stop_with_on_off]}}
+    match: {}
+  - id: "off"
+    name: "O (Aus)"
+    shape: {type: rect, x: 30, y: 102, width: 140, height: 68, rx: 10}
+    virtual_multi_press: {action: press, max_presses: 3}
+    actions:
+      - {id: press, name: Drücken, match: {command: "off"}}
+      - {id: hold, name: Halten, match: {command: move}}
+    match: {}

@@ -1,0 +1,122 @@
+id: z2m_hue_dimmer
+name: Hue Dimmer Switch (Zigbee2MQTT)
+manufacturer: Philips
+model: RWL021 / RWL022 / 324131092621
+integration: Zigbee2MQTT
+source: mqtt
+source_config:
+  topic: zigbee2mqtt/{identifier}
+inputs:
+- key: identifier
+  name: Z2M-Gerätename
+  selector:
+    text: {}
+image: hue_dimmer.svg
+image_size:
+- 160
+- 340
+buttons:
+- id: 'on'
+  name: Ein
+  shape:
+    type: rect
+    x: 35
+    y: 30
+    width: 90
+    height: 70
+    rx: 12
+  actions:
+  - id: press
+    name: Drücken
+    match:
+      action: on_press
+  - id: short_release
+    name: Kurz losgelassen
+    match:
+      action: on_press_release
+  - id: hold
+    name: Halten
+    match:
+      action: on_hold
+  - id: long_release
+    name: Lang losgelassen
+    match:
+      action: on_hold_release
+- id: up
+  name: Heller
+  shape:
+    type: rect
+    x: 35
+    y: 115
+    width: 90
+    height: 50
+    rx: 12
+  actions:
+  - id: press
+    name: Drücken
+    match:
+      action: up_press
+  - id: short_release
+    name: Kurz losgelassen
+    match:
+      action: up_press_release
+  - id: hold
+    name: Halten
+    match:
+      action: up_hold
+  - id: long_release
+    name: Lang losgelassen
+    match:
+      action: up_hold_release
+- id: down
+  name: Dunkler
+  shape:
+    type: rect
+    x: 35
+    y: 175
+    width: 90
+    height: 50
+    rx: 12
+  actions:
+  - id: press
+    name: Drücken
+    match:
+      action: down_press
+  - id: short_release
+    name: Kurz losgelassen
+    match:
+      action: down_press_release
+  - id: hold
+    name: Halten
+    match:
+      action: down_hold
+  - id: long_release
+    name: Lang losgelassen
+    match:
+      action: down_hold_release
+- id: 'off'
+  name: Aus
+  shape:
+    type: rect
+    x: 35
+    y: 240
+    width: 90
+    height: 70
+    rx: 12
+  actions:
+  - id: press
+    name: Drücken
+    match:
+      action: off_press
+  - id: short_release
+    name: Kurz losgelassen
+    match:
+      action: off_press_release
+  - id: hold
+    name: Halten
+    match:
+      action: off_hold
+  - id: long_release
+    name: Lang losgelassen
+    match:
+      action: off_hold_release

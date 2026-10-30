@@ -1,0 +1,17 @@
+{
+  "name": "switchboard-panel",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/panel.js --bundle --format=esm --minify --target=es2021 --outfile=../custom_components/switchboard/frontend/switchboard-panel.js",
+    "watch": "esbuild src/panel.js --bundle --format=esm --target=es2021 --watch --outfile=../custom_components/switchboard/frontend/switchboard-panel.js"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "lit": "^3.2.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}

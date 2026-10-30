@@ -1,0 +1,123 @@
+id: zha_hue_dimmer
+name: Hue Dimmer Switch (ZHA)
+manufacturer: Philips
+model: RWL021 / RWL022 / 324131092621
+integration: ZHA
+source: event
+source_config:
+  event_type: zha_event
+  identifier_key: device_ieee
+inputs:
+- key: identifier
+  name: IEEE-Adresse
+  selector:
+    text: {}
+image: hue_dimmer.svg
+image_size:
+- 160
+- 340
+buttons:
+- id: 'on'
+  name: Ein
+  shape:
+    type: rect
+    x: 35
+    y: 30
+    width: 90
+    height: 70
+    rx: 12
+  actions:
+  - id: press
+    name: Drücken
+    match:
+      command: on_press
+  - id: short_release
+    name: Kurz losgelassen
+    match:
+      command: on_short_release
+  - id: hold
+    name: Halten
+    match:
+      command: on_hold
+  - id: long_release
+    name: Lang losgelassen
+    match:
+      command: on_long_release
+- id: up
+  name: Heller
+  shape:
+    type: rect
+    x: 35
+    y: 115
+    width: 90
+    height: 50
+    rx: 12
+  actions:
+  - id: press
+    name: Drücken
+    match:
+      command: up_press
+  - id: short_release
+    name: Kurz losgelassen
+    match:
+      command: up_short_release
+  - id: hold
+    name: Halten
+    match:
+      command: up_hold
+  - id: long_release
+    name: Lang losgelassen
+    match:
+      command: up_long_release
+- id: down
+  name: Dunkler
+  shape:
+    type: rect
+    x: 35
+    y: 175
+    width: 90
+    height: 50
+    rx: 12
+  actions:
+  - id: press
+    name: Drücken
+    match:
+      command: down_press
+  - id: short_release
+    name: Kurz losgelassen
+    match:
+      command: down_short_release
+  - id: hold
+    name: Halten
+    match:
+      command: down_hold
+  - id: long_release
+    name: Lang losgelassen
+    match:
+      command: down_long_release
+- id: 'off'
+  name: Aus
+  shape:
+    type: rect
+    x: 35
+    y: 240
+    width: 90
+    height: 70
+    rx: 12
+  actions:
+  - id: press
+    name: Drücken
+    match:
+      command: off_press
+  - id: short_release
+    name: Kurz losgelassen
+    match:
+      command: off_short_release
+  - id: hold
+    name: Halten
+    match:
+      command: off_hold
+  - id: long_release
+    name: Lang losgelassen
+    match:
+      command: off_long_release

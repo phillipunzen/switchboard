@@ -1,0 +1,9 @@
+# Universell für alle Geräte mit event-Entitäten (Matter, Hue, ESPHome, Shelly …).
+# Tasten und Aktionen werden beim Anlegen aus den gewählten Entitäten gelesen.
+id: generic_event_entities
+name: Beliebige Event-Entitäten (automatisch)
+manufacturer: Universal
+integration: Matter / Hue / ESPHome / Shelly
+description: Wähle eine oder mehrere event-Entitäten – jede wird zu einer Taste.
+source: event_entity
+dynamic: true

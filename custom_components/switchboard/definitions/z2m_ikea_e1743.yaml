@@ -1,0 +1,30 @@
+id: z2m_ikea_e1743
+name: TRÅDFRI Ein/Aus-Schalter (Zigbee2MQTT)
+manufacturer: IKEA
+model: E1743
+integration: Zigbee2MQTT
+source: mqtt
+source_config:
+  topic: "zigbee2mqtt/{identifier}"
+inputs:
+  - key: identifier
+    name: Z2M-Gerätename
+    selector: {text: {}}
+image: ikea_e1743.svg
+image_size: [200, 200]
+buttons:
+  - id: "on"
+    name: "I (Ein)"
+    shape: {type: rect, x: 30, y: 30, width: 140, height: 68, rx: 10}
+    virtual_multi_press: {action: press, max_presses: 3}
+    actions:
+      - {id: press, name: Drücken, match: {action: "on"}}
+      - {id: hold, name: Halten, match: {action: brightness_move_up}}
+      - {id: release, name: Loslassen, match: {action: brightness_stop}}
+  - id: "off"
+    name: "O (Aus)"
+    shape: {type: rect, x: 30, y: 102, width: 140, height: 68, rx: 10}
+    virtual_multi_press: {action: press, max_presses: 3}
+    actions:
+      - {id: press, name: Drücken, match: {action: "off"}}
+      - {id: hold, name: Halten, match: {action: brightness_move_down}}
