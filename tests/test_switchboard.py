@@ -366,6 +366,29 @@ async def test_mqtt_z2m(hass, mqtt_mock, setup):
     assert len(calls) == 1
 
 
+async def test_mqtt_z2m_sonoff_snzb_01m(hass, mqtt_mock, setup):
+    from pytest_homeassistant_custom_component.common import async_fire_mqtt_message
+
+    definition = setup.registry.definitions["z2m_sonoff_snzb_01m"]
+    assert [b.id for b in definition.buttons] == ["button_1", "button_2", "button_3", "button_4"]
+
+    calls = async_mock_service(hass, "test", "snzb")
+    runtime = await setup.async_save(
+        {
+            "name": "SONOFF 4-fach",
+            "definition": "z2m_sonoff_snzb_01m",
+            "inputs": {"identifier": "Taster Flur"},
+            "actions": {"button_3.double": {"sequence": [{"action": "test.snzb"}]}},
+        }
+    )
+    assert runtime.running, runtime.error
+    async_fire_mqtt_message(hass, "zigbee2mqtt/Taster Flur", '{"action": "single_button_3"}')
+    async_fire_mqtt_message(hass, "zigbee2mqtt/Taster Flur", '{"action": "double_button_3"}')
+    async_fire_mqtt_message(hass, "zigbee2mqtt/Taster Flur", '{"action": "double_button_4"}')
+    await hass.async_block_till_done()
+    assert len(calls) == 1
+
+
 async def test_device_trigger_source(hass, setup):
     """Geräte-Trigger-Pfad mit entitätsbasierten Triggern einer Lampe testen."""
     from pytest_homeassistant_custom_component.common import MockConfigEntry

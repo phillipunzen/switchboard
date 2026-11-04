@@ -1,0 +1,48 @@
+id: z2m_sonoff_snzb_01m
+name: SONOFF 4-Tasten-Funkschalter (Zigbee2MQTT)
+manufacturer: SONOFF
+model: SNZB-01M
+integration: Zigbee2MQTT
+description: Vier Tasten, jeweils 1×/2×/3× drücken und lang drücken.
+source: mqtt
+source_config:
+  topic: "zigbee2mqtt/{identifier}"
+inputs:
+  - key: identifier
+    name: Z2M-Gerätename
+    selector: {text: {}}
+image: sonoff_snzb_01m.svg
+image_size: [200, 200]
+buttons:
+  - id: button_1
+    name: Taste 1
+    shape: {type: rect, x: 28, y: 28, width: 70, height: 70, rx: 12}
+    actions:
+      - {id: press, name: 1× drücken, match: {action: single_button_1}}
+      - {id: double, name: 2× drücken, match: {action: double_button_1}}
+      - {id: triple, name: 3× drücken, match: {action: triple_button_1}}
+      - {id: hold, name: Lang drücken, match: {action: long_button_1}}
+  - id: button_2
+    name: Taste 2
+    shape: {type: rect, x: 102, y: 28, width: 70, height: 70, rx: 12}
+    actions:
+      - {id: press, name: 1× drücken, match: {action: single_button_2}}
+      - {id: double, name: 2× drücken, match: {action: double_button_2}}
+      - {id: triple, name: 3× drücken, match: {action: triple_button_2}}
+      - {id: hold, name: Lang drücken, match: {action: long_button_2}}
+  - id: button_3
+    name: Taste 3
+    shape: {type: rect, x: 28, y: 102, width: 70, height: 70, rx: 12}
+    actions:
+      - {id: press, name: 1× drücken, match: {action: single_button_3}}
+      - {id: double, name: 2× drücken, match: {action: double_button_3}}
+      - {id: triple, name: 3× drücken, match: {action: triple_button_3}}
+      - {id: hold, name: Lang drücken, match: {action: long_button_3}}
+  - id: button_4
+    name: Taste 4
+    shape: {type: rect, x: 102, y: 102, width: 70, height: 70, rx: 12}
+    actions:
+      - {id: press, name: 1× drücken, match: {action: single_button_4}}
+      - {id: double, name: 2× drücken, match: {action: double_button_4}}
+      - {id: triple, name: 3× drücken, match: {action: triple_button_4}}
+      - {id: hold, name: Lang drücken, match: {action: long_button_4}}
